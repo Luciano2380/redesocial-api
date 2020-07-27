@@ -3,6 +3,7 @@ package br.com.frwk.redesocial.dto;
 import br.com.frwk.redesocial.domain.Comentario;
 import br.com.frwk.redesocial.domain.Foto;
 import br.com.frwk.redesocial.domain.Usuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
@@ -16,8 +17,10 @@ public class PostagemDTO {
     private Usuario usuario;
     private String textoPostagem;
     private LocalDateTime datacriacao;
+    @JsonIgnore
     private List<ComentarioDTO> comentarios = new ArrayList<ComentarioDTO>();
-    private List<FotoDTO> fotos = new ArrayList<FotoDTO>();
+    private String linkFoto ;
+    private FotoDTO foto;
 
 
     public Long getId() {
@@ -60,11 +63,19 @@ public class PostagemDTO {
         this.comentarios = comentarios;
     }
 
-    public List<FotoDTO> getFotos() {
-        return fotos;
+    public String getLinkFoto() {
+        return linkFoto;
     }
 
-    public void setFotos(List<FotoDTO> fotos) {
-        this.fotos = fotos;
+    public void setLinkFoto(String linkFoto) {
+        this.linkFoto = linkFoto;
+    }
+
+    public FotoDTO getFoto() {
+        return foto;
+    }
+
+    public void setFoto(FotoDTO foto) {
+        this.foto = foto;
     }
 }

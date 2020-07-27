@@ -2,6 +2,7 @@ package br.com.frwk.redesocial.controller;
 
 import br.com.frwk.redesocial.dto.ComentarioDTO;
 import br.com.frwk.redesocial.dto.FotoDTO;
+import br.com.frwk.redesocial.dto.LinkFotoDTO;
 import br.com.frwk.redesocial.service.IFotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,10 @@ public class FotoController {
     IFotoService service;
 
 
-    @PostMapping(path = "/imagem")
-    public ResponseEntity uploadImagem( @RequestParam("imagem") MultipartFile request) throws IOException {
+    @PostMapping(path = "/imagem",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LinkFotoDTO> uploadImagem( @RequestParam("imagem") MultipartFile request) throws IOException {
           String url = service.upload(request.getBytes(),request.getOriginalFilename());
-       return ResponseEntity.status(HttpStatus.CREATED).body(url);
+       return ResponseEntity.status(HttpStatus.CREATED).body(new LinkFotoDTO(url));
     }
 
     @PostMapping

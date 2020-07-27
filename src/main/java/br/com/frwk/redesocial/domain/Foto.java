@@ -18,10 +18,6 @@ public class Foto implements Serializable {
     @JoinColumn(name = "id_usu_fto")
     private Usuario usuario;
 
-    @ManyToOne()
-    @JoinColumn(name = "id_post_fto")
-    private Postagem postagem;
-
     @Column(name = "link_fto")
     private String linkFoto;
 
@@ -43,14 +39,6 @@ public class Foto implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public Postagem getPostagem() {
-        return postagem;
-    }
-
-    public void setPostagem(Postagem postagem) {
-        this.postagem = postagem;
     }
 
     public String getLinkFoto() {

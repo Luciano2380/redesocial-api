@@ -22,6 +22,12 @@ public class Postagem implements Serializable {
     @ManyToOne()
     @JoinColumn(name = "id_usu_post")
     private Usuario usuario;
+
+
+    @ManyToOne()
+    @JoinColumn(name = "id_fto_post")
+    private Foto foto;
+
     @Lob
     @Column(name = "texto_post")
     private String textoPostagem;
@@ -30,12 +36,18 @@ public class Postagem implements Serializable {
     private LocalDateTime datacriacao;
 
     @OneToMany(mappedBy = "postagem", fetch = FetchType.LAZY)
-    @Cascade(value = { CascadeType.DELETE})
     private List<Comentario> comentarios = new ArrayList<Comentario>();
 
-    @OneToMany(mappedBy = "postagem", fetch = FetchType.LAZY)
-    @Cascade(value = { CascadeType.DELETE})
-    private List<Foto> fotos = new ArrayList<Foto>();
+    @Transient
+    private String linkFoto ;
+
+    public String getLinkFoto() {
+        return linkFoto;
+    }
+
+    public void setLinkFoto(String linkFoto) {
+        this.linkFoto = linkFoto;
+    }
 
 
     public Long getId() {
@@ -78,12 +90,12 @@ public class Postagem implements Serializable {
         this.comentarios = comentarios;
     }
 
-    public List<Foto> getFotos() {
-        return fotos;
+    public Foto getFoto() {
+        return foto;
     }
 
-    public void setFotos(List<Foto> fotos) {
-        this.fotos = fotos;
+    public void setFoto(Foto foto) {
+        this.foto = foto;
     }
 
     @Override

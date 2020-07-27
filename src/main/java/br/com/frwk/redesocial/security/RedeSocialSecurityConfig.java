@@ -2,9 +2,7 @@ package br.com.frwk.redesocial.security;
 
 
 import br.com.frwk.redesocial.repository.UsuarioRepository;
-import br.com.frwk.redesocial.service.ISegurancaService;
 import br.com.frwk.redesocial.service.SegurancaService;
-import br.com.frwk.redesocial.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,17 +16,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.firewall.HttpFirewall;
-import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class RedeSocialSecurityConfig  extends WebSecurityConfigurerAdapter {
+public class RedeSocialSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SegurancaService segurancaService;
     @Autowired
@@ -39,9 +38,11 @@ public class RedeSocialSecurityConfig  extends WebSecurityConfigurerAdapter {
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(segurancaService).passwordEncoder(new BCryptPasswordEncoder());}
+        auth.userDetailsService(segurancaService).passwordEncoder(new BCryptPasswordEncoder());
+    }
 
 
     @Override
@@ -50,23 +51,27 @@ public class RedeSocialSecurityConfig  extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/redesocial/usuarios").permitAll()
                 .antMatchers(HttpMethod.POST, "/redesocial/login").permitAll()
                 .anyRequest().authenticated()
+                .and().cors()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new RedeSocialJwtAuthenticationFilter(segurancaService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
     }
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedMethods(Arrays.asList("*"));
+//        configuration.addAllowedHeader("Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With,observe,http://localhost:4200");
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
+//
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/**.html","/swagger-ui.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
+        web.ignoring().antMatchers("/**.html", "/swagger-ui.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
     }
 
 

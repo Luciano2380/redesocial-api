@@ -11,25 +11,27 @@ CREATE TABLE tb_usuarios (
  data_criacao_usu timestamp NOT NULL
 );
 
-CREATE SEQUENCE seq_tb_postagens;
-CREATE TABLE tb_postagens (
- id_post integer CONSTRAINT pk_id_post PRIMARY KEY,
- id_usu_post integer NOT NULL,
- texto_post text NOT NULL,
- data_criacao_post timestamp NOT NULL,
-  FOREIGN KEY (id_usu_post) REFERENCES tb_usuarios (id_usu) ON DELETE CASCADE
-);
-
 CREATE SEQUENCE seq_tb_fotos;
 CREATE TABLE tb_fotos (
  id_fto integer CONSTRAINT pk_id_fto PRIMARY KEY,
  id_usu_fto integer NOT NULL,
- id_post_fto integer NULL,
  link_fto varchar(200)  NOT NULL,
  data_criacao_fto timestamp NOT NULL,
-  FOREIGN KEY (id_usu_fto) REFERENCES tb_usuarios (id_usu) ON DELETE CASCADE,
-  FOREIGN KEY (id_post_fto) REFERENCES tb_postagens (id_post) ON DELETE CASCADE
+  FOREIGN KEY (id_usu_fto) REFERENCES tb_usuarios (id_usu) ON DELETE CASCADE
 );
+
+CREATE SEQUENCE seq_tb_postagens;
+CREATE TABLE tb_postagens (
+ id_post integer CONSTRAINT pk_id_post PRIMARY KEY,
+ id_usu_post integer NOT NULL,
+ id_fto_post integer NULL,
+ texto_post text NOT NULL,
+ data_criacao_post timestamp NOT NULL,
+  FOREIGN KEY (id_usu_post) REFERENCES tb_usuarios (id_usu) ON DELETE CASCADE,
+  FOREIGN KEY (id_fto_post) REFERENCES tb_fotos (id_fto) ON DELETE CASCADE
+);
+
+
 
 CREATE SEQUENCE seq_tb_comentarios;
 CREATE TABLE tb_comentarios (
